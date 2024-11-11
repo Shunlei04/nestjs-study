@@ -13,6 +13,7 @@ import { MainDatabaseModule } from './services/databases/main-database/main-data
 import { postgresqlDatabaseConfig } from './services/databases/postgresql-database/postgresql-database.config';
 import { PostgresqlDatabaseModule } from './services/databases/postgresql-database/postgresql-database.module';
 import { SecondaryDatabaseModule } from './services/databases/secondary-database/secondary-database.module';
+import { AjvModule } from './services/global/ajv/ajv.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { SecondaryDatabaseModule } from './services/databases/secondary-database
     DepartmentsModule,
     WardsModule,
     BedsModule,
+    AjvModule,
   ],
   controllers: [AppController],
   providers: [AppService],

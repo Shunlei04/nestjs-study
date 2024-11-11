@@ -10,13 +10,14 @@ import {
 import { WardsService } from './wards.service';
 import { CreateWardDto } from './dto/create-ward.dto';
 import { UpdateWardDto } from './dto/update-ward.dto';
+import { CreateWardPayloadPipe } from './pipes/create-ward-payload.pipe';
 
 @Controller('wards')
 export class WardsController {
   constructor(private readonly wardsService: WardsService) {}
 
   @Post()
-  create(@Body() createWardDto: CreateWardDto) {
+  create(@Body(CreateWardPayloadPipe) createWardDto: CreateWardDto) {
     return this.wardsService.create(createWardDto);
   }
 
