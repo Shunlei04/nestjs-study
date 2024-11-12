@@ -10,26 +10,28 @@ import { DepartmentsModule } from './apps/postgresql/departments/departments.mod
 import { WardsModule } from './apps/postgresql/wards/wards.module';
 import { SnackModule } from './apps/secondary/snack/snack.module';
 import { MainDatabaseModule } from './services/databases/main-database/main-database.module';
-import { postgresqlDatabaseConfig } from './services/databases/postgresql-database/postgresql-database.config';
 import { PostgresqlDatabaseModule } from './services/databases/postgresql-database/postgresql-database.module';
 import { SecondaryDatabaseModule } from './services/databases/secondary-database/secondary-database.module';
 import { AjvModule } from './services/global/ajv/ajv.module';
+import { mainDatabaseConfig } from './services/databases/main-database/main-database.config';
+import { DatabaseEnum } from './resources/enum/database.enum';
+import { secondaryDatabaseConfig } from './services/databases/secondary-database/secondary-database.config';
 
 @Module({
   imports: [
     // Typeorm
-    // TypeOrmModule.forRoot(mainDatabaseConfig),
-    // TypeOrmModule.forRootAsync({
-    //   name: DatabaseEnum.SECONDARY,
-    //   useFactory: () => secondaryDatabaseConfig,
-    // }),
+    TypeOrmModule.forRoot(mainDatabaseConfig),
+    TypeOrmModule.forRootAsync({
+      name: DatabaseEnum.SECONDARY,
+      useFactory: () => secondaryDatabaseConfig,
+    }),
 
     // TypeOrmModule.forRootAsync({
     //   name: DatabaseEnum.POSTGRESQL,
     //   useFactory: () => postgresqlDatabaseConfig,
     // }),
 
-    TypeOrmModule.forRoot(postgresqlDatabaseConfig),
+    // TypeOrmModule.forRoot(postgresqlDatabaseConfig),
 
     // Modules
     UsersModule,

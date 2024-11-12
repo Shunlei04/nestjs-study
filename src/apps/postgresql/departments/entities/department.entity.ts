@@ -4,7 +4,7 @@ import { Column, Entity } from 'typeorm';
 @Entity()
 export class Department extends AbstractEntity<Department> {
   @Column({ nullable: true, unique: true })
-  name: string;
+  departmentName: string;
 
   @Column()
   description: string;
