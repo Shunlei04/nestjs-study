@@ -1,10 +1,17 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { SocketIoAdapter } from './services/global/socket-io/socket-io.adapter';
+import { methods } from './app.data';
 
 const port = 3000;
 
+const logger = new Logger();
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger,
+  });
 
   // helmet
   // app.use(helmet({}));
@@ -12,13 +19,19 @@ async function bootstrap() {
   // CORS
   app.enableCors({
     origin: '*',
+    methods: methods,
     credentials: true,
   });
 
-  await app.listen(port);
+  const redisAdpater = new SocketIoAdapter(app);
+  redisAdpater.setLogger(logger);
+  app.useWebSocketAdapter(redisAdpater);
 
-  console.log(`
-    Sever started on port ${port}
-    `);
+  await app.listen(port, () => {
+    console.log(`
+    Server is running on port: ${port}
+    Current Process ID: ${process.pid}
+`);
+  });
 }
 bootstrap();
