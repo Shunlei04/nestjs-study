@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class User extends AbstractEntity<User> {
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column()
@@ -17,7 +17,7 @@ export class User extends AbstractEntity<User> {
   @ManyToOne(() => Title, (title) => title)
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   // @Check(`dateOfBirth <= '2006-12-31'`)
   dateOfBirth: Date;
 }

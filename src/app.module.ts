@@ -16,6 +16,20 @@ import { AjvModule } from './services/global/ajv/ajv.module';
 import { mainDatabaseConfig } from './services/databases/main-database/main-database.config';
 import { DatabaseEnum } from './resources/enum/database.enum';
 import { secondaryDatabaseConfig } from './services/databases/secondary-database/secondary-database.config';
+import { AuthModule } from './apps/main/auth/auth.module';
+import { CryptoJsModule } from './services/individual/crypto/crypto.module';
+import { TokenModule } from './services/global/token/token.module';
+import { TokenGuard } from './guards/token/token.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { User } from './apps/main/users/entities/user.entity';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: User | null;
+    }
+  }
+}
 
 @Module({
   imports: [
@@ -34,19 +48,22 @@ import { secondaryDatabaseConfig } from './services/databases/secondary-database
     // TypeOrmModule.forRoot(postgresqlDatabaseConfig),
 
     // Modules
-    UsersModule,
+    AjvModule,
+    AuthModule,
+    BedsModule,
+    CryptoJsModule,
+    DepartmentsModule,
     MainDatabaseModule,
-    TitlesModule,
+    PostgresqlDatabaseModule,
+    RolesModule,
     SecondaryDatabaseModule,
     SnackModule,
-    RolesModule,
-    PostgresqlDatabaseModule,
-    DepartmentsModule,
+    TitlesModule,
+    TokenModule,
+    UsersModule,
     WardsModule,
-    BedsModule,
-    AjvModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: TokenGuard }],
 })
 export class AppModule {}
