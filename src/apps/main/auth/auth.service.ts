@@ -5,6 +5,7 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { CryptoJsService } from 'src/services/individual/crypto/crypto.service';
 import { AppEnvValues } from 'src/resources/env/app.env';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     // console.log(AppEnvValues.JWT_SECRET_KEY);
   }
 
-  async signinUser(payload: SigninPayloadType, ip: string) {
+  async signinUser(req: Request, payload: SigninPayloadType, ip: string) {
     const user = await this.usersService.findOne({
       where: { username: payload.username },
     });
@@ -25,11 +26,16 @@ export class AuthService {
       throw new UnauthorizedException('Password is incorrect');
     }
 
+    const userAgentHex = this.cryptoJsService.hexString(
+      req.headers['user-agent'],
+    );
+
     // generate acccess token
     const accessTokenPayload: TokenPayloadType = {
       tp: 0,
       uid: user.id,
-      ip: ip,
+      ip: req.ip,
+      usa: userAgentHex,
     };
     const accessToken = sign(accessTokenPayload, AppEnvValues.JWT_SECRET_KEY, {
       expiresIn: AppEnvValues.ACCESS_TOKEN_EXP_SECOND,
@@ -40,6 +46,7 @@ export class AuthService {
       tp: 1,
       uid: user.id,
       ip: ip,
+      usa: userAgentHex,
     };
     const refreshToken = sign(
       refreshTokenPayload,

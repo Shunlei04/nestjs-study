@@ -19,14 +19,20 @@ import { secondaryDatabaseConfig } from './services/databases/secondary-database
 import { AuthModule } from './apps/main/auth/auth.module';
 import { CryptoJsModule } from './services/individual/crypto/crypto.module';
 import { TokenModule } from './services/global/token/token.module';
-import { TokenGuard } from './guards/token/token.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { User } from './apps/main/users/entities/user.entity';
+import { AppGuardGuard } from './guards/app-guard/app-guard.guard';
+import { AssignReqGuard } from './guards/assign-req/assign-req.guard';
+import { PolicyGuard } from './guards/policy/policy.guard';
+import { TokenPayloadType } from './apps/main/auth/auth.type';
 
 declare global {
   namespace Express {
     interface Request {
       user: User | null;
+      isRouterPublic: boolean;
+      isRouterOnlyForAdmin: boolean;
+      tokenPayload: TokenPayloadType;
     }
   }
 }
@@ -64,6 +70,11 @@ declare global {
     WardsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: TokenGuard }],
+  providers: [
+    AppService,
+    AssignReqGuard,
+    PolicyGuard,
+    { provide: APP_GUARD, useClass: AppGuardGuard },
+  ],
 })
 export class AppModule {}

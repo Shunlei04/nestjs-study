@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { randomBytes } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 
 @Injectable()
 export class CryptoJsService {
@@ -7,5 +7,9 @@ export class CryptoJsService {
 
   randomHexString(bytes: any) {
     return randomBytes(bytes).toString('hex');
+  }
+
+  hexString(string: string) {
+    return createHash('sha256').update(string).digest('hex');
   }
 }

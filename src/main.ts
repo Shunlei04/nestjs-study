@@ -23,9 +23,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const redisAdpater = new SocketIoAdapter(app);
-  redisAdpater.setLogger(logger);
-  app.useWebSocketAdapter(redisAdpater);
+  // const redisAdpater = new SocketIoAdapter(app);
+  // redisAdpater.setLogger(logger);
+  // app.useWebSocketAdapter(redisAdpater);
 
   await app.listen(port, () => {
     console.log(`
