@@ -16,7 +16,7 @@ export class AuthService {
     // console.log(AppEnvValues.JWT_SECRET_KEY);
   }
 
-  async signinUser(req: Request, payload: SigninPayloadType, ip: string) {
+  async signinUser(req: Request, payload: SigninPayloadType) {
     const user = await this.usersService.findOne({
       where: { username: payload.username },
     });
@@ -45,7 +45,7 @@ export class AuthService {
     const refreshTokenPayload: TokenPayloadType = {
       tp: 1,
       uid: user.id,
-      ip: ip,
+      ip: req.ip,
       usa: userAgentHex,
     };
     const refreshToken = sign(

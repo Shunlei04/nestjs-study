@@ -15,6 +15,6 @@ export class AuthController {
     @Body(SigninPayloadPipe) payload: SigninPayloadType,
     @Req() req: Request,
   ) {
-    return this.authService.signinUser(payload, req.ip);
+    return this.authService.signinUser(req, payload);
   }
 }

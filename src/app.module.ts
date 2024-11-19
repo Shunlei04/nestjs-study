@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -74,6 +74,7 @@ declare global {
     AppService,
     AssignReqGuard,
     PolicyGuard,
+    Logger,
     { provide: APP_GUARD, useClass: AppGuardGuard },
   ],
 })
