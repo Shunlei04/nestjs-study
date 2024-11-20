@@ -1,20 +1,28 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DatabaseEnum } from 'src/resources/enum/database.enum';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CreateBedDto } from './dto/create-bed.dto';
 import { UpdateBedDto } from './dto/update-bed.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Bed } from './entities/bed.entity';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class BedsService {
-  constructor(@InjectRepository(Bed) private bedRepository: Repository<Bed>) {}
+  constructor(
+    @InjectRepository(Bed, DatabaseEnum.POSTGRESQL)
+    private bedRepository: Repository<Bed>,
+  ) {}
 
   count(options?: FindManyOptions<Bed>) {
     return this.bedRepository.count(options);
   }
   create(createBedDto: CreateBedDto) {
-    const bed = this.bedRepository.create(createBedDto);
-    return this.bedRepository.save(bed);
+    try {
+      const bed = this.bedRepository.create(createBedDto);
+      return this.bedRepository.save(bed);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findAll(options?: FindManyOptions<Bed>) {

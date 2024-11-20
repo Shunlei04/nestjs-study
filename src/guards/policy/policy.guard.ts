@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   Logger,
   UnauthorizedException,
@@ -31,6 +32,11 @@ export class PolicyGuard implements CanActivate {
       return true;
     }
 
+    // is there user
+    if(!req.user) {
+      throw new UnauthorizedException('User does not exist');
+    }
+
     // is user valid
     if (!req.user?.active) {
       throw new UnauthorizedException('User account is inactive');
@@ -42,14 +48,14 @@ export class PolicyGuard implements CanActivate {
     }
 
     // is ip matched
-    if (req.ip !== req.tokenPayload.ip) {
+    if (req.ip !== req.tokenPayload?.ip) {
       throw new UnauthorizedException(`IP not matched`);
     }
 
     // user agent
     if (
       this.cryptoJsService.hexString(req.headers['user-agent']) !==
-      req.tokenPayload.usa
+      req.tokenPayload?.usa
     ) {
       throw new UnauthorizedException(`User agent not matched`);
     }
@@ -84,14 +90,22 @@ export class PolicyGuard implements CanActivate {
         context.getHandler(),
       ) as RequiredRuleType<any, any, any>[];
 
-      rules.forEach((rule) => {
-        ForbiddenError.from(ability).throwUnlessCan(rule);
+      try {
+        rules?.forEach((rule) => {
+          ForbiddenError.from(ability).throwUnlessCan(
+            rule.action,
+            rule.subject,
+            rule.fields,
+          );
 
-        // example
-        // if (!ability.can(rule.action, rule.subject, rule.fields)) {
-        //   throw new UnauthorizedException('You are not allowed');
-        // }
-      });
+          // example
+          // if (!ability.can(rule.action, rule.subject, rule.fields)) {
+          //   throw new UnauthorizedException('You are not allowed');
+          // }
+        });
+      } catch (error) {
+        throw new ForbiddenException(error);
+      }
     }
 
     return true;

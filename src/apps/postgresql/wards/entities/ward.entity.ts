@@ -1,12 +1,14 @@
 import { AbstractEntity } from 'src/resources/base/abstract-entity.base';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { Bed } from '../../beds/entities/bed.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class Ward extends AbstractEntity<Ward> {
   @Column({ nullable: false, unique: true })
   wardName: string;
 
-  @OneToMany(() => Bed, (bed) => bed.ward)
-  beds: Bed[];
+  @Column({ nullable: true })
+  bedId: number;
+
+  // @OneToMany(() => Bed, (bed) => bed.ward)
+  // beds: Bed[];
 }

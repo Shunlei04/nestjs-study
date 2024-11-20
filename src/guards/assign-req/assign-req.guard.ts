@@ -60,10 +60,11 @@ export class AssignReqGuard implements CanActivate {
     try {
       // extract token
       const bearToken = req.headers.authorization;
-      const token = bearToken.replace('Bearer ', '');
+      const token = bearToken?.replace('Bearer ', '');
 
       // verify token
       const tokenPayload = this.tokenService.verifyAccessToken(token);
+      req.tokenPayload = tokenPayload;
 
       // find and verify user
       const user = await this.usersService.findOne({

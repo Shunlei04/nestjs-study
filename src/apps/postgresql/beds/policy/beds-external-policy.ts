@@ -30,6 +30,7 @@ export function BedsExternalPolicyFactory(
     can(CaslActionsEnum.MANAGE, Bed);
   } else {
     cannot(CaslActionsEnum.READ, Bed);
+    // cannot(CaslActionsEnum.READ, Bed).because('You are not admin');
   }
 
   return build();

@@ -19,7 +19,5 @@ export class CreateBedNoPipe implements PipeTransform {
     } else {
       throw new NotAcceptableException(validator.errors);
     }
-
-    return value;
   }
 }

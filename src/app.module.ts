@@ -25,6 +25,7 @@ import { AppGuardGuard } from './guards/app-guard/app-guard.guard';
 import { AssignReqGuard } from './guards/assign-req/assign-req.guard';
 import { PolicyGuard } from './guards/policy/policy.guard';
 import { TokenPayloadType } from './apps/main/auth/auth.type';
+import { postgresqlDatabaseConfig } from './services/databases/postgresql-database/postgresql-database.config';
 
 declare global {
   namespace Express {
@@ -44,6 +45,11 @@ declare global {
     TypeOrmModule.forRootAsync({
       name: DatabaseEnum.SECONDARY,
       useFactory: () => secondaryDatabaseConfig,
+    }),
+
+    TypeOrmModule.forRootAsync({
+      name: DatabaseEnum.POSTGRESQL,
+      useFactory: () => postgresqlDatabaseConfig,
     }),
 
     // TypeOrmModule.forRootAsync({
