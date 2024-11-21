@@ -2,6 +2,7 @@ import { Controller, Get, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AppService } from './app.service';
 import { join } from 'path';
+import { IsPulic } from './guards/policy/decorator/policy.decorator';
 
 @Controller()
 export class AppController {
